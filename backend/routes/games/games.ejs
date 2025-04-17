@@ -1,0 +1,162 @@
+<%- include('../layout/header', { suppressHeader: true, gameId: id }) %>
+
+<div class="px-4 py-3">
+  <h2 class="text-2xl font-bold"><%= description %></h2>
+</div>
+
+<div class="flex flex-col md:flex-row">
+  <!-- Main game content section -->
+  <div class="md:w-2/3 pr-5 flex flex-col items-center">
+    <div class="usercontainer1 flex flex-wrap justify-center space-x-4 mb-4">
+      <% users.forEach(user => { %>
+      <div class="flex flex-col items-center px-10">
+        <img
+          src="https://gravatar.com/avatar/<%= user.gravatar %>"
+          class="h-10 w-10 rounded-full"
+          alt="User Avatar"
+        />
+        <p class="font-bold text-gray-800">
+          <%= user.email.substring(0, user.email.indexOf("@")) %>
+        </p>
+      </div>
+      <% }); %>
+    </div>
+    <p class="isstartedelement m-4 p-4">
+      <% if(is_started === false) { %> Waiting for Players... <% } %>
+    </p>
+
+    <!-- Game table -->
+    <div class="px-10 py-10 flex flex-col items-center space-y-2">
+      <!-- Game control buttons -->
+      <button
+        id="start-button"
+        class="px-4 py-2 mb-4 rounded bg-blue-500 text-white font-semibold hover:bg-blue-600 transition duration-200"
+        onclick="startGame()"
+      >
+        Start
+      </button>
+
+      <!-- Table to display user card count -->
+      <div id="users-cardcount" class="overflow-x-auto mt-5 w-full">
+        <table class="table-auto w-full shadow-md">
+          <tbody id="players">
+            <tr class="playersinfo">
+              <th class="username"></th>
+              <th class="count"></th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Current player's cards container -->
+      <div id="currentplayer-cards" class="flex flex-wrap justify-center space-x-2 mt-4"></div>
+
+      <!-- Other players' cards container -->
+      <div id="otherplayers-cards" class="flex flex-wrap justify-center space-x-2 mt-2"></div>
+
+      <!-- Top card container -->
+      <div id="topcardimg" class="flex flex-col items-center"></div>
+
+      <!-- Display current player's turn -->
+      <span id="current-player-turn" class="text-lg font-semibold text-gray-800"></span>
+
+      <!-- Top card and draw button -->
+      <div class="px-10 py-10 flex flex-col items-center space-y-2">
+        <button
+          id="draw-button"
+          class="p-2 rounded-full bg-blue-500 hover:bg-blue-600 transition duration-200 hidden"
+          onclick="drawCard()"
+        >
+          <img
+            class="w-16 h-16 rounded shadow-md"
+            src="/images/favicons/option_draw2.png"
+            alt="Draw Card"
+          />
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat section on the right -->
+  <div class="md:w-1/3 w-1/3"><%- include("../chat/chat") %></div>
+</div>
+
+<!-- JavaScript functions -->
+<script>
+  // Function to handle starting the game
+  function startGame() {
+    const startGameUrl = `/games/<%=id %>/start`;
+
+    ClickUrlGET(startGameUrl);
+  }
+
+  // Function to handle drawing a card
+  function drawCard() {
+    const drawCardUrl = `/games/<%= id %>/draw`;
+
+    ClickUrlPOST(drawCardUrl);
+  }
+
+  // Function for GET requests
+  function ClickUrlGET(url) {
+    fetch(url, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Handle response data
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("GET request error:", error);
+      });
+  }
+
+  // Function for POST requests
+  function ClickUrlPOST(url) {
+    fetch(url, {
+      method: "POST",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (!data.success) {
+          alert(data.message); // Show error message if draw attempt fails
+        } else {
+          // Handle success case, e.g., update UI or refresh game state
+          console.log("Card drawn successfully");
+        }
+      })
+      .catch((error) => {
+        console.error("POST request error:", error);
+      });
+  }
+</script>
+
+<!-- Templates -->
+<template id="topcard-template">
+  <tr>
+    <th class="color"></th>
+    <th class="value"></th>
+    <th class="userid"></th>
+  </tr>
+</template>
+
+<template id="topcard-template-img">
+  <img class="topcard-img" src="" alt="Top Card" />
+</template>
+
+<template id="user-template">
+  <span class="username"></span>
+  <div class="cardsCount"></div>
+</template>
+
+<template id="card-template">
+  <img class="cardimage w-16 h-24" src="" alt="Card Image" />
+</template>
+<!-- A Player Template -->
+<template id="players-template">
+  <tr>
+    <th class="username"></th>
+    <th class="count"></th>
+  </tr>
+</template>

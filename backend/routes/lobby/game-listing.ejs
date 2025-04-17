@@ -1,0 +1,58 @@
+<!-- Available games -->
+
+<div class="px-4 py-3">
+  <h1 class="text-lg mt-10 font-bold">Available Games</h1>
+
+  <template id="available-game-template">
+    <%- include("available-game", { game: { id: -1, gravatar: "", email: "@"}}) %>
+  </template>
+  <ul
+    role="list"
+    id="available-games-list"
+    class="mt-3 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-2"
+  >
+    <% availableGames.forEach(game => { %>
+    <%- include("available-game", { game }) %>
+    <% }) %>
+  </ul>
+</div>
+
+<!-- Rejoinable games -->
+
+<div class="px-4 py-3">
+  <h1 class="text-lg mt-10 font-bold">Rejoinable Games</h1>
+
+  <template id="rejoin-game-template">
+    <%- include("rejoin-game", { game: { id: -1, gravatar: "", email: "@"}}) %>
+  </template>
+
+  <ul
+    role="list"
+    id="rejoin-games-list"
+    class="mt-3 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-2"
+  >
+    <% rejoinGames.forEach(game => { %>
+    <%- include("rejoin-game", { game }) %>
+    <% }) %>
+  </ul>
+</div>
+
+<!-- Rejoinable games -->
+
+<div class="px-4 py-3">
+  <h1 class="text-lg mt-10 font-bold">Running Games</h1>
+
+  <template id="rejoin-game-template">
+    <%- include("running-game", { game: { id: -1, gravatar: "", email: "@"}}) %>
+  </template>
+
+  <ul
+    role="list"
+    id="rejoin-games-list"
+    class="mt-3 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-2"
+  >
+    <% runningGames.forEach(game => { %>
+    <%- include("running-game", { game }) %>
+    <% }) %>
+  </ul>
+</div>
